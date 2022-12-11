@@ -220,7 +220,7 @@ def x2frequency_analysis(cipher, keywordLength):
 
 # Este é um codificador simples de uma cifra de Vigenere utilizando uma tabela de vigenere
 def vigenere_encoder(message, keyword):
-    messageList = [x for x in message.upper() if x.isalpha()]
+    messageList = [x for x in unicodedata.normalize('NFKD', message.upper()) if x.isalpha()]
     keywordList = [x for x in keyword.upper() if x.isalpha()]
     key = keyword_into_key(keywordList, messageList)
     ciphertext = []
