@@ -2,6 +2,7 @@
 # Matrícula: 190112794
 
 from math import ceil
+import string
 import unicodedata
 
 vigenereTable = [
@@ -96,6 +97,23 @@ def distances_for_repeated_sequencies(positions):
         if pos > 0:
             sequencyDistances.append(positions[pos] - positions[pos-1])
     return sequencyDistances
+
+def put_spaces(cipherwithspaces, cipherwithoutspaces):
+    spaceList = []
+    for l in [x for x in cipherwithspaces.upper()]:
+        if l in string.punctuation or l in string.whitespace:
+            spaceList.append(l)
+        else:
+            spaceList.append("*")
+    pos = 0
+    spacesAssigned = []
+    for sl in spaceList:
+        if sl == '*' and pos != len(cipherwithoutspaces):
+            spacesAssigned.append(cipherwithoutspaces[pos])
+            pos = pos + 1
+        elif sl == ' ':
+            spacesAssigned.append(" ")
+    return ("".join(spacesAssigned)).upper()
 
 # Esta função realiza a conta de acordo com a repetição e a distância de acordo com fatores comuns
 def factors_and_distances(distances):
@@ -225,7 +243,7 @@ def vigenere_encoder(message, keyword):
             index_message = alphabet_to_number(messageList[j])
             if i == j:
                 ciphertext.append(vigenereTable[index_key][index_message])
-    return ("".join(ciphertext)).lower()
+    return put_spaces(message, ciphertext)
 
 # Este é um decodificador simples de uma cifra de Vigenere utilizando uma tabela de vigenere
 def vigenere_decoder(cipher, keyword):
@@ -237,7 +255,7 @@ def vigenere_decoder(cipher, keyword):
         index_key = alphabet_to_number(key[i])  
         index_cipher = number_to_rowIndex(cipherList[i], vigenereTable[index_key])
         decodedMessage.append(number_to_alphabet(index_cipher))
-    return ("".join(decodedMessage)).lower()
+    return put_spaces(cipher, decodedMessage)
 
 # Este é um solucionador de cifras de Vigenere utilizando uma tabela de vigenere, Frequência de Kasiski para encontrar possíveis
 # valores do tamanho das chaves, e Frequência X2 para encontrar cada letra de cada posição da palavra-chave.
